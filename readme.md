@@ -43,11 +43,11 @@ Approach
 ○ Ridge Regression \
 ○ Lasso Regression \
 ● Voting Regressor 
-4. Model Deployment <br />
+4. Model Deployment \
 ● APIs \
 ● Web Application Development using FastAPI \
 ● Heroku Deployment \
 ● Model Inference Pipeline 
-5. Testing
-● A/B
+5. Testing \
+● A/B \
 ● AA/B

@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title('Real Estate Price Prediction of PUNE')
+st.title('Real Estate Price Prediction')
 
 col1, col2, col3 = st.columns(3)
 
@@ -25,9 +25,9 @@ with col3:
     state_name = st.selectbox('State', options=['Maharashtra/India'])
 
 
-property_description = st.text_input('Property descriptions')
-value = [property_type,township_name,mall_in,gym_in, property_area,club_in, park_jogging_track, city_name, property_locality, school_university, swimming_pool_in, state_name]
+property_description = st.text_input('Property Descriptions')
+value = {'Property type': property_type,'Town ship name': township_name,'Mall in Township':mall_in,'Gym in Property': gym_in, 'Property Area': property_area,'Club in Township': club_in, 'Park/Jogging Track': park_jogging_track, 'City name': city_name, 'Property Locality': property_locality, 'School//University': school_university, 'Swimming pool near by': swimming_pool_in,'State name': state_name}
 st.write(value)
 st.write(property_description)
 
-submit_button = st.button(label='Predict', type='primary')
+submit_button = st.button(label='Prediction', type='primary')

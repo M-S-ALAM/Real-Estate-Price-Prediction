@@ -7,7 +7,7 @@ col1, col2, col3 = st.columns(3)
 
 
 with col1:
-    property_type = st.number_input('Property Type in BHK', min_value=1.0, max_value=6.0, step=0.5,format="%.1f")
+    property_type = st.selectbox('Property Type in BHK', options = ['1', '2', '3', '4', '5', '6', 0, '2.5', '3.5', '4.5'])
     township_name = st.selectbox('Township name', options=['Vanaha ', 'Godrej Hills retreat', 'ANP Universe', 'Urban Skyline','VTP Cierra', 'VTP Blue Water', 'OM Mangalam Chaitanya', 'Sukwani Aspire', 'Mantra 29 Gold', 'Mantra Monarch', 'Infinity', 'Mantra Insignia', '7Hills','Mantra Sky Tower', 'the work club', 'newton homes', 'lesiure Town', 'k ville', 'bluegrass residences', 'brookefield willows', 'tranquility annexe', 'mahalunge riviera ', 'simplicity', 'aureta ', 'unique legacy royale', 'Presidia ', 'Eternia 2.0', 'Bliss Solitaire', 'Impero', 'River Dale Residency', 'Neco Beaumont', 'Anutham' 'Sensorium ', 'kiarah terrazo', 'Dolphin Garima ', 'Oxy Beaumonde ', 'Sportsville ', 'Presidenta ', 'Bhaktamar Residency ', 'Parklane UrbanJoy ', 'khush vista', 'oxy eterno', 'Abitante Fiore', 'puraniks Sayama', 'Rhythm county ', 'Kalpataru Serenity', 'Satyam Shivam', 'Satyam Serenity', 'jade residences ', 'Satyam Shery', 'Atulya Kanhe', 'SUPREME ESTIA', 'TEJ ELEVIA', 'vtp solitaire '])
     mall_in = st.selectbox('Mall in township', options=['Yes', 'No'])
     gym_in = st.selectbox('Gym in township', options=['Yes', 'No'])

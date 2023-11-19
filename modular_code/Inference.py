@@ -11,12 +11,13 @@ import pickle
 import pandas as pd
 import numpy as np
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from ML_pipeline.textprocess import process_text
-
-#nltk.download('stopwords', halt_on_error=False)
+from modular_code.ML_pipeline.textprocess import process_text
 
 
 class Real_estate_inference:
+    """
+
+    """
     def __init__(self, test):
         self.test_data = None
         self.model = None
@@ -48,7 +49,6 @@ class Real_estate_inference:
 
     def add_features(self, data):
         # Load Area price
-        print(os.getcwd())
         fileName = '/home/shobot/Desktop/Project/Real Estate Price Prediction/model/sub_area_price_map.pkl'
         with open(fileName, 'rb') as file:
             sub_area_price = pickle.load(file)
@@ -66,19 +66,21 @@ class Real_estate_inference:
                          'Swimming Pool Clean']
         temp = data[amenities_col].values
         Amenities_score = temp.sum()
+        data['Amenities score'] = Amenities_score
         fileName = '/home/shobot/Desktop/Project/Real Estate Price Prediction/model/amenities_score_price_map.pkl'
         with open(fileName, 'rb') as file:
             amenities_price = pickle.load(file)
         data['Price by Amenities score'] = amenities_price[Amenities_score]
         data['Description clean'] = data['Description'].apply(lambda x: x.lower().strip())
         data['compound'], data['negative'], data['positive'], data['neutral'] = self.generate_sentiment_scores(data)
-        data['Description clean'] = data['Description clean'].astype(str).apply(process_text)
+        data = process_text(data)
         fileName = '/home/shobot/Desktop/Project/Real Estate Price Prediction/model/count_vectorizer.pkl'
-        # with open(fileName, 'wb') as f:
-        cv_object = pickle.load(fileName)
+        with open(fileName, 'rb') as file:
+            cv_object = pickle.load(file)
         X = cv_object.transform(data['Description clean'])
-
-        print(data)
+        df_ngram = pd.DataFrame(X.toarray(), columns=cv_object.get_feature_names_out())
+        data = pd.concat([data.reset_index(drop=True), df_ngram.reset_index(drop=True)], axis=1)
+        return data
 
     def processing(self, data):
         numbers = re.compile(r"[-+]?(\d*\.\d+|\d+)")
@@ -104,16 +106,35 @@ class Real_estate_inference:
         data['Gym Clean'] = data['Gym'].apply(lambda x: x.lower().strip()).map({'yes': 1, 'no': 0})
         data['Property Area in Sq. Ft. clean'] = data['Property Area in Sq. Ft.'].apply(
             lambda x: self.avg_property_area(str(x)))
+
         return data
 
     def predict(self):
         # self.model = load_model()
         self.test_data = pd.DataFrame(self.test, index=[0])
         data = self.processing(self.test_data)
-        self.add_features(data)
+        data = self.add_features(data)
+        important_columns = ['Property Type clean', 'ClubHouse Clean', 'School / University in Township Clean',
+                             'Hospital in TownShip Clean', 'Mall in TownShip Clean', 'Park / Jogging track Clean',
+                             'Swimming Pool Clean', 'Gym Clean', 'Property Area in Sq. Ft. clean', 'Price by sub-area',
+                             'Price by company', 'Price by township_society', 'Amenities score',
+                             'Price by Amenities score', 'Noun_Counts', 'Verb_Counts', 'Adjective_Counts', 'compound',
+                             'negative', 'positive', 'neutral', 'amenities like', 'boasts elegant', 'elegant towers',
+                             'great community', 'mantra gold', 'offering bedroom', 'quality specification',
+                             'stories offering', 'towers stories', 'world class']
+        data = data[important_columns]
+        filename = '/home/shobot/Desktop/Project/Real Estate Price Prediction/model/features.pkl'
+        with open(filename, 'rb') as file:
+            featuresMod = pickle.load(file)
+        featuresMod = list(featuresMod)
+        featuresMod.remove('Price_in_lakhs')
+        data.columns = featuresMod
+        fileName = '/home/shobot/Desktop/Project/Real Estate Price Prediction/model/lasso_model.pkl'
+        with open(fileName, 'rb') as file:
+            model = pickle.load(file)
+        prediction = model.predict(data)
         lower = 0
-        upper = 100
-        return lower, upper
+        return lower, prediction
 
 
 def main():
@@ -122,6 +143,8 @@ def main():
     township_name = 'Godrej Hills retreat'
     mall_in = "Yes"
     gym_in = "Yes"
+    state = 'Maharastra'
+    country = 'India'
     city_name = "Pune"
     school_university = "yes"
     park_jogging_track = "Yes"
@@ -136,10 +159,10 @@ def main():
              'Property Area in Sq. Ft.': property_area, 'ClubHouse': club_in,
              'Park / Jogging track': park_jogging_track, 'City': city_name, 'Sub-Area': property_locality,
              'School / University in Township ': school_university, 'Swimming Pool': swimming_pool_in,
-             'Company Name': company_name, 'Description': property_description}
+             'Company Name': company_name, 'Description': property_description, 'State': state, 'Country': country}
     real_estate_price = Real_estate_inference(value)
     lower, upper = real_estate_price.predict()
-    text = 'The price of this property between {} lakhs and {} lakhs.'.format(lower, upper)
+    text = 'The price of this property between {} lakhs and {} lakhs.'.format(lower, upper[0])
     print(text)
 
 

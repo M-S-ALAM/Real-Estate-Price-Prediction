@@ -40,12 +40,12 @@ Approach
 ● Linear Regression \
 ● Confidence Interval \
 ● Regularization \
-○ Ridge Regression \
-○ Lasso Regression \
+● Ridge Regression \
+● Lasso Regression \
 ● Voting Regressor 
 4. Model Deployment \
 ● APIs \
-● Web Application Development using FastAPI \
+● Web Application Development using Streamlit \
 ● Heroku Deployment \
 ● Model Inference Pipeline 
 5. Testing \

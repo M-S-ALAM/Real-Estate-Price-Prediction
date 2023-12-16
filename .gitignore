@@ -6,3 +6,4 @@ inputs/Predicted_train.csv
 inputs/Predicted_val.csv
 model
 __pycache__
+logs.log

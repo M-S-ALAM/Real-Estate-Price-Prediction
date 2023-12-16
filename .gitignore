@@ -1,5 +1,8 @@
 .idea
 .ipynb_checkpoints
 inputs/Clean Pune Real Estate Data.xlsx
+inputs/Predicted_test.csv
+inputs/Predicted_train.csv
+inputs/Predicted_val.csv
 model
 __pycache__

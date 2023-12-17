@@ -7,3 +7,4 @@ inputs/Predicted_val.csv
 model
 __pycache__
 logs.log
+Final Model .pkl
